@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drop Virtual Store</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #050510; 
+            color: #ffffff; 
+            margin: 0; 
+            padding: 0; 
+        }
+        header { 
+            background: linear-gradient(90deg, #100b21, #0a0814); 
+            padding: 30px; 
+            text-align: center; 
+            border-bottom: 2px solid #ff007a; 
+            box-shadow: 0 0 20px rgba(255, 0, 122, 0.3); 
+        }
+        .logo { 
+            width: 180px; 
+        }
+        .container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            padding: 50px 20px; 
+            gap: 30px; 
+        }
+        .card { 
+            background: #131124; 
+            border: 1px solid #3a0ca3; 
+            border-radius: 12px; 
+            width: 300px; 
+            padding: 20px; 
+            text-align: center; 
+            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.1); 
+            transition: transform 0.3s, box-shadow 0.3s; 
+        }
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 25px rgba(255, 106, 0, 0.4); 
+            border-color: #ff6a00; 
+        }
+        .card img { 
+            width: 100%; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+        }
+        .card h3 { 
+            margin: 10px 0; 
+            font-size: 20px; 
+            color: #f72585; 
+        }
+        .card p { 
+            color: #4cc9f0; 
+            font-size: 22px; 
+            font-weight: bold; 
+            margin: 10px 0; 
+        }
+        .btn { 
+            display: inline-block; 
+            background: linear-gradient(45deg, #f72585, #ff6a00); 
+            color: #ffffff; 
+            text-decoration: none; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            width: 80%; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            transition: 0.3s; 
+        }
+        .btn:hover { 
+            background: linear-gradient(45deg, #ff6a00, #f72585); 
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.6); 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="sua-logo.png" alt="Drop Virtual Store" class="logo">
+    </header>
+    <div class="container">
+        <div class="card">
+            <img src="https://via.placeholder.com/300x160/131124/4cc9f0?text=Produto+1" alt="Produto 1">
+            <h3>Pack Canva Editável</h3>
+            <p>R$ 47,00</p>
+            <a href="SEU_LINK_AQUI" class="btn">Comprar</a>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/300x160/131124/f72585?text=Produto+2" alt="Produto 2">
+            <h3>Curso TikTok Ads</h3>
+            <p>R$ 97,00</p>
+            <a href="SEU_LINK_AQUI" class="btn">Comprar</a>
+        </div>
+    </div>
+</body>
+</html>
