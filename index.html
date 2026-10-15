@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drop Virtual Store - Infoprodutos e Packs</title>
+    <style>
+        /* Variáveis de Cores Baseadas na Logo */
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #1f2833;
+            --primary-orange: #ff6a00;
+            --primary-pink: #f72585;
+            --primary-blue: #4cc9f0;
+            --text-light: #ffffff;
+            --text-muted: #8892b0;
+            --border-color: rgba(76, 201, 240, 0.2);
+        }
+
+        /* Reset Básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Navbar Dinâmica (Estilo GameMarket/Jetflix) */
+        header {
+            background: rgba(11, 12, 16, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Substitua pelo nome do ficheiro da sua logo no GitHub */
+        .logo-img {
+            height: 50px;
+            width: auto;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--primary-pink);
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: rgba(247, 37, 133, 0.1);
+            box-shadow: 0 0 10px rgba(247, 37, 133, 0.5);
+        }
+
+        .btn-register {
+            background: linear-gradient(90deg, var(--primary-pink), var(--primary-orange));
+            color: var(--text-light);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.4);
+        }
+
+        /* Banner Hero (Topo do site) */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: radial-gradient(circle at top, rgba(76, 201, 240, 0.1) 0%, var(--bg-color) 70%);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-pink), var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Grid de Produtos (Estilo Cartões Interativos) */
+        .products-section {
+            padding: 40px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 5px;
+            height: 25px;
+            background: var(--primary-orange);
+            border-radius: 3px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* Cartão de Produto Individual */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-pink);
+            box-shadow: 0 10px 25px rgba(247, 37, 133, 0.2);
+        }
+
+        /* Etiqueta de Desconto (OFF) */
+        .badge-off {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-pink);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            z-index: 2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        .img-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .category {
+            font-size: 0.8rem;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .price-container {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .new-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ff88; /* Verde chamativo para o preço */
+        }
+
+        /* Botão de Comprar Dinâmico */
+        .btn-buy {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(90deg, #2b32b2, #1488cc);
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-buy:hover {
+            background: linear-gradient(90deg, var(--primary-pink), var(--primary-orange));
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.6);
+            border-color: transparent;
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 50px;
+            color: var(--text-muted);
+        }
+
+        /* Responsividade para telemóveis */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .nav-buttons { display: none; /* Esconde botões no telemóvel para não quebrar o layout, pode adicionar um menu hambúrguer depois */ }
+            header { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <!-- Substitua "1000029800_2.jpg" pelo nome exato da sua imagem no GitHub -->
+            <img src="1000029800_2.jpg" alt="Drop Virtual Store Logo" class="logo-img">
+        </div>
+        <div class="nav-buttons">
+            <a href="#" class="btn-login">Entrar</a>
+            <a href="#" class="btn-register">Registar</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>O Seu Arsenal Digital</h1>
+        <p>Encontre os melhores infoprodutos, packs de design, cursos e ferramentas para alavancar o seu negócio online num só lugar.</p>
+    </section>
+
+    <section class="products-section">
+        <h2 class="section-title">Lançamentos em Destaque</h2>
+        
+        <div class="grid">
+            <!-- PRODUTO 1 -->
+            <div class="card">
+                <div class="badge-off">-50% OFF</div>
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Pack Canva" class="card-img">
+                </div>
+                <div class="card-content">
+                    <span class="category">Design / Templates</span>
+                    <h3 class="card-title">Mega Pack Canva Editável 2026</h3>
+                    <div class="price-container">
+                        <span class="old-price">R$ 94,00</span>
+                        <span class="new-price">R$ 47,00</span>
+                    </div>
+                    <!-- Substitua o # pelo seu link de checkout -->
+                    <a href="#" class="btn-buy">🛒 Comprar Agora</a>
+                </div>
+            </div>
+
+            <!-- PRODUTO 2 -->
+            <div class="card">
+                <div class="badge-off">-30% OFF</div>
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Curso TikTok" class="card-img">
+                </div>
+                <div class="card-content">
+                    <span class="category">Marketing / Tráfego</span>
+                    <h3 class="card-title">Mestres do TikTok Ads</h3>
+                    <div class="price-container">
+                        <span class="old-price">R$ 139,00</span>
+                        <span class="new-price">R$ 97,00</span>
+                    </div>
+                    <a href="#" class="btn-buy">🛒 Comprar Agora</a>
+                </div>
+            </div>
+
+            <!-- PRODUTO 3 -->
+            <div class="card">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="E-book Programação" class="card-img">
+                </div>
+                <div class="card-content">
+                    <span class="category">E-books / Programação</span>
+                    <h3 class="card-title">Guia Prático: Lógica de Programação</h3>
+                    <div class="price-container">
+                        <span class="new-price">R$ 29,90</span>
+                    </div>
+                    <a href="#" class="btn-buy">🛒 Comprar Agora</a>
+                </div>
+            </div>
+             <!-- PRODUTO 4 -->
+            <div class="card">
+                 <div class="badge-off">-70% OFF</div>
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Pack de Jogos Retro" class="card-img">
+                </div>
+                <div class="card-content">
+                    <span class="category">Games / Emuladores</span>
+                    <h3 class="card-title">Pack 10.000 Jogos Retro + Emulador</h3>
+                    <div class="price-container">
+                        <span class="old-price">R$ 99,90</span>
+                        <span class="new-price">R$ 29,90</span>
+                    </div>
+                    <a href="#" class="btn-buy">🛒 Comprar Agora</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Drop Virtual Store. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>
